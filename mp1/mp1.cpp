@@ -32,7 +32,6 @@ void rotate(std::string inputFile, std::string outputFile) {
 PNG myArt(unsigned int width, unsigned int height) {
 
   PNG png = PNG(width, height);
-  HSLAPixel *yellow = new HSLAPixel(53, 1, 0.5);
   HSLAPixel *ocean = new HSLAPixel (213, 1, 0.5);
 
   for (unsigned int x = 0; x<width; x++){
