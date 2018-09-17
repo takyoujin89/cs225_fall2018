@@ -145,3 +145,9 @@ if (factor == 1.0){
   }
   return;
 }
+
+void Image::scale (unsigned w, unsigned h){
+  double factor = w/width();
+  scale(factor);
+
+}
