@@ -25,5 +25,6 @@ int main()
     fileio::halt();
 
     cout << endl;
+//    delete theAllocator;
     return 0;
 }
