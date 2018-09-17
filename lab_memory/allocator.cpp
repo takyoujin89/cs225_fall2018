@@ -54,9 +54,10 @@ void Allocator::loadRooms(const string& file)
     totalCapacity = 0;
     int i = 0;
     while (fileio::areMoreRooms()) {
-        i++;
+
         rooms[i] = fileio::nextRoom();
         totalCapacity += rooms[i].capacity;
+        i++;
     }
 }
 
@@ -123,7 +124,7 @@ Room* Allocator::largestOpening()
     }
     return &rooms[index];
 }
-Allocator::Allocator(const Allocator & other){
+/*Allocator::Allocator(const Allocator & other){
   alpha = new Letter[26];
   for (int i = 0; i<26; i++){
     alpha[i] = other.alpha[i];
@@ -143,7 +144,7 @@ Allocator & Allocator ::operator = (Allocator const & other){
     }
   }
   return *this;
-}
+}*/
 Allocator::~Allocator(){
   delete[] alpha;
   alpha = NULL;
