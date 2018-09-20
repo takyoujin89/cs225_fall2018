@@ -73,4 +73,5 @@ class Circle : public Shape
      * @param radius the new radius of the Circle in pixels
      */
     void set_radius(int radius);
+
 };

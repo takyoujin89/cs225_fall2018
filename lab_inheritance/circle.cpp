@@ -9,7 +9,7 @@
  */
 
 #include "circle.h"
-
+#include "shape.h"
 #include <cassert>
 #include <cstdio>
 #include <cmath>
@@ -17,10 +17,11 @@
 const double PI = 3.141592;
 
 Circle::Circle(const Vector2& pcenter, const HSLAPixel& pcolor, int pradius)
-    : radius_(pradius)
-{
+    : Shape(pcenter, pcolor) {
+      radius_ = pradius;
+    }
     /* Nothing.  See initialization list. */
-}
+
 
 int Circle::area() const
 {
@@ -104,8 +105,8 @@ void Circle::draw(PNG* canvas) const
     pixel = this->color();
 
     int x = 0;
-    int y = this->radius_;
-    int p = 1 - this->radius_;
+    int y = radius();
+    int p = 1 - radius();
     this->drawPoints(canvas, x, y);
 
     while (x < y) {
