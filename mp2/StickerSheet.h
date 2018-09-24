@@ -20,14 +20,15 @@ public:
   void removeSticker(unsigned index);
   Image * getSticker (unsigned index) const;
   Image render() const;
-
-
-  Image* arr;
-  unsigned * indexes;
-  unsigned int max_;
-  unsigned int numStickers;
-  unsigned int numIndexes;
-  Image basePic;
   void copy(const StickerSheet &other);
   void kill();
+
+private:
+  Image** arr;
+  unsigned * xes;
+  unsigned * yes;
+  unsigned max_;
+
+  Image *basePic;
+
 };
