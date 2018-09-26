@@ -14,7 +14,7 @@ List<T>::List(List<T> const& other) {
 template <class T>
 List<T>& List<T>::operator=(List<T> const& rhs) {
     if (this != &rhs) {
-        _destory();
+        _destroy();
         _copy(rhs);
     }
     return *this;
