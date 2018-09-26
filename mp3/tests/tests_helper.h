@@ -2,7 +2,7 @@
 
 #include "../cs225/PNG.h"
 #include "../cs225/HSLAPixel.h"
-#include "../list.h"
+#include "../List.h"
 
 using namespace cs225;
 
