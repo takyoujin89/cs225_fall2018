@@ -29,7 +29,7 @@ typename List<T>::ListIterator List<T>::end() const {
  */
 template <typename T>
 List<T>::~List() {
-  /// @todo Graded in MP3.1
+  _destroy();
 }
 
 /**
@@ -38,7 +38,15 @@ List<T>::~List() {
  */
 template <typename T>
 void List<T>::_destroy() {
-  /// @todo Graded in MP3.1
+  ListNode * temp = head_;
+  while (temp->next!=NULL)
+  { temp = temp->next;
+    delete temp->prev;
+    length_--;
+  }
+    delete tail_;
+    head_ = NULL;
+    tail_ = NULL;
 }
 
 /**
@@ -49,7 +57,20 @@ void List<T>::_destroy() {
  */
 template <typename T>
 void List<T>::insertFront(T const & ndata) {
-  /// @todo Graded in MP3.1
+  ListNode * node = new ListNode(ndata);
+  if (head_ == NULL){
+    head_ = node;
+    //prev default to null
+    tail_ = head_;
+
+  }
+  else{
+  node ->next = head_;
+  node ->prev = NULL; //technically not needed
+  head_ ->prev = node;
+  head_ = node;
+}
+  length_++;
 }
 
 /**
@@ -60,7 +81,18 @@ void List<T>::insertFront(T const & ndata) {
  */
 template <typename T>
 void List<T>::insertBack(const T & ndata) {
-  /// @todo Graded in MP3.1
+  ListNode * node = new ListNode(ndata);
+  if (tail_ == NULL){
+    tail_ = node;
+    head_ = tail_;
+  }
+  else{
+  tail_ ->next = node;
+  node ->next = NULL;
+  node ->prev = tail_;
+  tail_ = node;
+}
+  length_++;
 }
 
 /**
@@ -85,6 +117,32 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.1
+  ListNode * a = startPoint;
+  ListNode * b = endPoint;
+  ListNode * c = NULL;
+  ListNode * d = NULL;
+
+  while (a!=b){
+
+    if(a->next==b&&b->prev==a){
+      b->prev = a->prev;
+      a->next = b->next;
+      a->prev = b;
+      b->next = a;
+      return;
+    }
+
+    c = b->prev;
+    d = a->next;
+    b -> prev = a -> prev;
+    a->next = b->next;
+    b->next = d;
+    a ->prev = c;
+    a = d;
+    b = c;
+}
+
+return;
 }
 
 /**
