@@ -188,7 +188,28 @@ void List<T>::reverseNth(int n) {
  */
 template <typename T>
 void List<T>::waterfall() {
-  /// @todo Graded in MP3.1
+//ListNode * temp1;
+//ListNode * temp2;
+
+ListNode * a = head_->next;
+ListNode * b = head_;
+while(a!=tail_){
+  b->next = a->next;
+  a->next->prev = b;
+  a->next = NULL;
+  a->prev = tail_;
+  tail_->next = a;
+  tail_ = a;
+if(b->next->next!=NULL){
+  b=b->next->next;
+  a=b;
+  b=b->prev;
+}
+else{
+  if(b->next==NULL) return;
+}
+}
+return;
 }
 
 /**
