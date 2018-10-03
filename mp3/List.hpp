@@ -176,9 +176,8 @@ void List<T>::reverseNth(int n)
   while(a !=NULL){
     int k = 1;
     b = a;
-    while(k!=n){
+    for(k=1;k<n;k++){
       if(b->next==NULL){break;} //last chunk ends short
-      k++;
       b = b->next;
         }
     temp = b->next;
