@@ -117,52 +117,43 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.1
-  ListNode * temp1;
-  ListNode * temp2;
+//  ListNode * temp1;
+//  ListNode * temp2;
+
   ListNode * a = startPoint;
-  ListNode * b = endPoint;
-
-
-  if ((length_==0)||(startPoint == NULL) || (endPoint ==NULL) || (startPoint == endPoint)){
+  ListNode * b = NULL;
+  ListNode * c = endPoint;
+  startPoint = endPoint;
+  endPoint = a;
+  if ((startPoint == NULL) || (endPoint ==NULL) || (startPoint == endPoint)){
     return;
   }
-
-while (a!=b){
-
-  if(a->next == b && b->prev == a){
-    temp1 = a->prev;
-    temp2 = b->prev;
-    a->prev = a->next;
-    a->next = temp1;
-    b->prev = b->next;
-    b->next = temp2;
-    return;
+  while(b!=c){
+    b = a;
+    a = a->next;
+    b->next = b->prev;
+    b->prev = a;
   }
-  temp1 = a->prev;
-  temp2 = b->prev;
-  a->prev = a->next;
-  a->next = temp1;
-  b->prev = b->next;
-  b->next = temp2;
-  b=b->next;
-  a=a->prev;
-}
 
-if (startPoint == head_){
-  head_ = endPoint;
-}
-else{
-  startPoint->prev->next = endPoint;
+if(startPoint == tail_){
+    tail_ = endPoint;
+  }
+if (endPoint == head_){
+  head_ = startPoint;
 }
 
 
-if(endPoint == tail_){
-  tail_ = startPoint;
+if(endPoint->next==NULL){
+  startPoint->prev =NULL;
 }
-else{
-  endPoint->next->prev = startPoint;
-}
+else{endPoint ->next ->next = startPoint;
+startPoint ->prev = endPoint->next;}
 
+if(a==NULL){
+  endPoint->next=NULL;
+}
+else{endPoint->next = a;
+a->prev = endPoint;}
 return;
 }
 
@@ -176,23 +167,23 @@ template <typename T>
 void List<T>::reverseNth(int n)
 {
   ListNode * a = head_;
+  ListNode * b;
   ListNode * temp;
-  ListNode * temp2;
-  if ((head_==NULL)||(n==1)){return;}
+  if ((head_==NULL)||(n<=1)){return;}
   if (n>=length_){
   reverse();
   return;}
   while(a !=NULL){
     int k = 1;
-    temp = a;
+    b = a;
     while(k!=n){
-      if(temp->next==NULL){break;} //last chunk ends short
+      if(b->next==NULL){break;} //last chunk ends short
       k++;
-      temp = temp->next;
+      b = b->next;
         }
-      temp2 = temp->next;
-      reverse(a, temp);
-      a = temp2;
+    temp = b->next;
+    reverse(a, b);
+    a = temp;
   }
 
 
