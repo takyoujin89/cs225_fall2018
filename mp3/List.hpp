@@ -173,8 +173,29 @@ return;
  * @param n The size of the blocks in the List to be reversed.
  */
 template <typename T>
-void List<T>::reverseNth(int n) {
-  /// @todo Graded in MP3.1
+void List<T>::reverseNth(int n)
+{
+  ListNode * a = head_;
+  ListNode * temp;
+  ListNode * temp2;
+  if ((head_==NULL)||(n==1)){return;}
+  if (n>=length_){
+  reverse();
+  return;}
+  while(a !=NULL){
+    int k = 1;
+    temp = a;
+    while(k!=n){
+      if(temp->next==NULL){break;} //last chunk ends short
+      k++;
+      temp = temp->next;
+        }
+      temp2 = temp->next;
+      reverse(a, temp);
+      a = temp2;
+  }
+
+
 }
 
 /**
