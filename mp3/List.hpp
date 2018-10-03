@@ -143,17 +143,17 @@ if (endPoint == head_){
 }
 
 
-if(endPoint->next==NULL){
-  startPoint->prev =NULL;
-}
-else{endPoint ->next ->next = startPoint;
-startPoint ->prev = endPoint->next;}
+if(endPoint->next!=NULL){
+  endPoint ->next ->next = startPoint;
+  startPoint ->prev = endPoint->next;}
 
-if(a==NULL){
-  endPoint->next=NULL;
-}
-else{endPoint->next = a;
-a->prev = endPoint;}
+else startPoint->prev =NULL;
+
+if(a!=NULL)
+  {endPoint->next = a;
+  a->prev = endPoint;}
+
+else endPoint->next=NULL;
 return;
 }
 
@@ -174,7 +174,7 @@ void List<T>::reverseNth(int n)
   reverse();
   return;}
   while(a !=NULL){
-    int k = 1;
+    int k;
     b = a;
     for(k=1;k<n;k++){
       if(b->next==NULL){break;} //last chunk ends short
