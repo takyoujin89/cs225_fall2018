@@ -11,7 +11,7 @@
 template <typename T>
 typename List<T>::ListIterator List<T>::begin() const {
   // @TODO: graded in MP3.1
-  return List<T>::ListIterator(nullptr);
+  return List<T>::ListIterator(head_);
 }
 
 /**
@@ -20,7 +20,7 @@ typename List<T>::ListIterator List<T>::begin() const {
 template <typename T>
 typename List<T>::ListIterator List<T>::end() const {
   // @TODO: graded in MP3.1
-  return List<T>::ListIterator(nullptr);
+  return List<T>::ListIterator(tail_->next);
 }
 
 /**
@@ -117,29 +117,50 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.1
+  ListNode * temp1;
+  ListNode * temp2;
   ListNode * a = startPoint;
   ListNode * b = endPoint;
-  ListNode * c = NULL;
-  ListNode * d = NULL;
 
-  while (a!=b){
 
-    if(a->next==b&&b->prev==a){
-      b->prev = a->prev;
-      a->next = b->next;
-      a->prev = b;
-      b->next = a;
-      return;
-    }
+  if ((length_==0)||(startPoint == NULL) || (endPoint ==NULL) || (startPoint == endPoint)){
+    return;
+  }
 
-    c = b->prev;
-    d = a->next;
-    b -> prev = a -> prev;
-    a->next = b->next;
-    b->next = d;
-    a ->prev = c;
-    a = d;
-    b = c;
+while (a!=b){
+
+  if(a->next == b && b->prev == a){
+    temp1 = a->prev;
+    temp2 = b->prev;
+    a->prev = a->next;
+    a->next = temp1;
+    b->prev = b->next;
+    b->next = temp2;
+    return;
+  }
+  temp1 = a->prev;
+  temp2 = b->prev;
+  a->prev = a->next;
+  a->next = temp1;
+  b->prev = b->next;
+  b->next = temp2;
+  b=b->next;
+  a=a->prev;
+}
+
+if (startPoint == head_){
+  head_ = endPoint;
+}
+else{
+  startPoint->prev->next = endPoint;
+}
+
+
+if(endPoint == tail_){
+  tail_ = startPoint;
+}
+else{
+  endPoint->next->prev = startPoint;
 }
 
 return;
@@ -176,6 +197,10 @@ void List<T>::waterfall() {
  * @param splitPoint Point at which the list should be split into two.
  * @return The second list created from the split.
  */
+
+
+
+
 template <typename T>
 List<T> List<T>::split(int splitPoint) {
     if (splitPoint > length_)
