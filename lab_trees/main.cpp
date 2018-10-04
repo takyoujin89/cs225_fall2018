@@ -8,7 +8,9 @@
 
 #include <algorithm>
 #include <iostream>
+#include "util.h"
 #include "binarytree.h"
+#include "abstractsyntaxtree.h"
 #include "coloredout.h"
 #include "random.h"
 #include "TreeTraversals/PreorderTraversal.h"
@@ -19,6 +21,9 @@ using namespace util;
 
 template <typename T>
 void printTreeInfo(const BinaryTree<T>& tree, const string& name,
+                   const string& description);
+
+void printASTInfo(const AbstractSyntaxTree& tree, const string& name,
                    const string& description);
 
 int main(int argc, char** argv)
@@ -89,6 +94,15 @@ int main(int argc, char** argv)
     printTreeInfo(myBST, "Almost BST",
                   "a tree that has one element out of place");
 
+    std::string compute_string = "(12 + ((6 * 23) - 57) / 2)";
+    typename BinaryTree<std::string>::Node* root;
+    pemdasToAST(compute_string, root);
+    AbstractSyntaxTree basicAST(root);
+
+    printASTInfo(basicAST, compute_string, "AST For Computing The Equation");
+
+    basicAST.mirror();
+    printASTInfo(basicAST, "Mirror of " + compute_string, "AST For Computing The Mirror of The Equation");
 	
     return 0;
 }
@@ -116,7 +130,7 @@ void printTreeInfo(const BinaryTree<T>& tree, const string& name,
     cout << "printLeftRight: ";
     tree.printLeftToRight();
     vector<vector<T> > v;
-    tree.printPaths(v);
+    tree.getPaths(v);
     for(size_t i=0; i<v.size(); i++){
       cout<<"path: ";
       for(size_t j=0; j<v[i].size(); j++){
@@ -137,6 +151,45 @@ void printTreeInfo(const BinaryTree<T>& tree, const string& name,
 	cout << "inorder: ";
 	InorderTraversal<int> iot(tree.getRoot());
 	for (TreeTraversal<int>::Iterator it = iot.begin(); it != iot.end(); ++it) {
+		cout<<(*it)->elem<<" ";
+	}
+
+
+    cout << endl<< endl;
+}
+
+void printASTInfo(const AbstractSyntaxTree& tree, const string& name,
+                   const string& description)
+{
+      output_header(name, description);
+    cout << "height: " << tree.height() << endl;
+    cout << "calculated value: " << tree.eval() << endl;
+    tree.print();
+    cout << endl;
+    cout << "printLeftRight: ";
+    tree.printLeftToRight();
+    vector<vector<std::string> > v;
+    tree.getPaths(v);
+    for(size_t i=0; i<v.size(); i++){
+      cout<<"path: ";
+      for(size_t j=0; j<v[i].size(); j++){
+        cout<<v[i][j]<<" ";
+      }
+      cout<<endl;
+    }
+
+	cout<<endl;
+	
+	cout << "preorder: ";
+	PreorderTraversal<std::string> pot(tree.getRoot());
+	for (TreeTraversal<std::string>::Iterator it = pot.begin(); it != pot.end(); ++it) {
+		cout<<(*it)->elem<<" ";
+	}
+	cout<<endl;
+
+	cout << "inorder: ";
+	InorderTraversal<std::string> iot(tree.getRoot());
+	for (TreeTraversal<std::string>::Iterator it = iot.begin(); it != iot.end(); ++it) {
 		cout<<(*it)->elem<<" ";
 	}
 

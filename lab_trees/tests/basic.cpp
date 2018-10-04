@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include "../util.h"
 #include "../binarytree.h"
 #include "../abstractsyntaxtree.h"
 
@@ -23,7 +24,40 @@
 using namespace std;
 using namespace util;
 
+typename BinaryTree<int>::Node* genNonIsOrderedTree()
+{
+  typename BinaryTree<int>::Node* bottomLeft = new typename BinaryTree<int>::Node(8);
+  bottomLeft->left = new typename BinaryTree<int>::Node(2);
+  typename BinaryTree<int>::Node* five_node = new typename BinaryTree<int>::Node(5);
+  five_node->left = bottomLeft;
+  typename BinaryTree<int>::Node* zero_node = new typename BinaryTree<int>::Node(0);
+  zero_node->left = five_node;
+  zero_node->right = new typename BinaryTree<int>::Node(3);
+  zero_node->right->right = new typename BinaryTree<int>::Node(4);
+  typename BinaryTree<int>::Node* seven_node = new typename BinaryTree<int>::Node(7);
+  seven_node->left = new typename BinaryTree<int>::Node(1);
+  seven_node->right = new typename BinaryTree<int>::Node(9);
+  typename BinaryTree<int>::Node* root = new typename BinaryTree<int>::Node(6);
+  root->left = zero_node;
+  root->right = seven_node;
+  return root;
+}
 
+void genIsOrderedTree(BinaryTree<int> &tree)
+{
+  tree.insert(6, true);
+  tree.insert(10, true);
+  tree.insert(7, true);
+  tree.insert(4, true);
+  tree.insert(0, true);
+  tree.insert(8, true);
+  tree.insert(9, true);
+  tree.insert(11, true);
+  tree.insert(1, true);
+  tree.insert(3, true);
+  tree.insert(2, true);
+  tree.insert(5, true);
+}
 
 void assertMirror(vector<int> a, vector<int> b)
 {
@@ -43,102 +77,6 @@ void assert_path(vector<vector <int> > a, vector<vector<int> > b)
             CHECK(a[i][j]==b[i][j]);
         }
     }
-}
-
-double pemdas_to_ast(const std::string &pemdas_str, typename BinaryTree<std::string>::Node* &t, vector<std::pair<typename BinaryTree<std::string>::Node*, double>> &subtrees)
-{
-    std::string spaceless = "";
-    for (const char c : pemdas_str) {
-        if (c != ' ') {
-            spaceless += c;
-        }
-    }
-
-    // Decent parsing time
-    std::string tokenize = "";
-    for (size_t i = 0; i < spaceless.length(); ++i)
-    {
-        if (spaceless[i] == '(')
-        {
-            int depth = 1;
-            string tok = "";
-            ++i;
-            while (true)
-            {
-                if (spaceless[i] == '(')
-                {
-                    ++depth;
-                } 
-                else if (spaceless[i] == ')')
-                {
-                    --depth;
-                    if (depth == 0)
-                    {
-                        ++i;
-                        break;
-                    }
-                }
-                tok += spaceless[i];
-                ++i;
-            }
-            typename BinaryTree<std::string>::Node* temp_tree;
-            double res = pemdas_to_ast(tok, temp_tree, subtrees);
-            tokenize += "[" + std::to_string(subtrees.size()) + "]";
-            subtrees.push_back({temp_tree, res});
-        }
-        tokenize += spaceless[i];
-    }
-
-    // Recursion Time
-    for (size_t i = 0; i < tokenize.length(); ++i) 
-    {
-        if (tokenize[i] == '+') {
-            t = new typename BinaryTree<std::string>::Node("+");
-            return pemdas_to_ast(tokenize.substr(0, i), t->left, subtrees) + pemdas_to_ast(tokenize.substr(i+1, tokenize.length()-i-1), t->right, subtrees);
-        }
-        else if (tokenize[i] == '-') {
-            t = new typename BinaryTree<std::string>::Node("-");
-            return pemdas_to_ast(tokenize.substr(0, i), t->left, subtrees) - pemdas_to_ast(tokenize.substr(i+1, tokenize.length()-i-1), t->right, subtrees);
-        }
-    }
-
-    for (size_t i = 0; i < tokenize.length(); ++i)
-    {
-        if (tokenize[i] == '*') {
-            t = new typename BinaryTree<std::string>::Node("*");
-            return pemdas_to_ast(tokenize.substr(0, i), t->left, subtrees) * pemdas_to_ast(tokenize.substr(i+1, tokenize.length()-i-1), t->right, subtrees);
-        }
-        else if (tokenize[i] == '/') {
-            t = new typename BinaryTree<std::string>::Node("/");
-            return pemdas_to_ast(tokenize.substr(0, i), t->left, subtrees) / pemdas_to_ast(tokenize.substr(i+1, tokenize.length()-i-1), t->right, subtrees);
-        }
-    }
-
-    if (tokenize[0] == '[')
-    {
-        int i = 1;
-        std::string idx_str = "";
-        while (tokenize[i] != ']')
-        {
-            idx_str += tokenize[i];
-            ++i;
-        }
-        if (idx_str != "")
-        {
-            int idx = stoi(idx_str);
-            t = subtrees[idx].first;
-            return subtrees[idx].second;
-        }
-        cout << "pass" << endl;
-    }
-
-    t = new typename BinaryTree<std::string>::Node(tokenize);
-    return stod(tokenize);
-}
-
-double pemdas_to_ast(const std::string &pemdas_str, typename BinaryTree<std::string>::Node* &t) {
-    vector<std::pair<typename BinaryTree<std::string>::Node*, double>> subtrees;
-    return pemdas_to_ast(pemdas_str, t, subtrees);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -175,58 +113,25 @@ TEST_CASE("test_mirror", "[weight=10]"){
 }
 
 TEST_CASE("test_isOrderedRecursive", "[weight=10]"){
-    vector<int> ordering;
-    ordering.resize(10);
-    for(size_t i = 0; i < ordering.size(); i++)
-        ordering[i] = i;
-    srand( 1234 );
-    random_shuffle(ordering.begin(), ordering.end());
-
-    BinaryTree<int> tree;
-    for (size_t i = 0; i < ordering.size(); i++)
-        tree.insert(ordering[i]);
+    BinaryTree<int> tree(genNonIsOrderedTree());
 
     REQUIRE(tree.isOrderedRecursive() == false);
 
-    ordering.resize(12);
-    for (size_t i = 0; i < ordering.size(); i++)
-        ordering[i] = i;
-    srand( 1234 );
-    random_shuffle(ordering.begin(), ordering.end());
-
     BinaryTree<int> tree2;
-    for (size_t i = 0; i < ordering.size(); i++)
-        tree2.insert(ordering[i], true);
+    genIsOrderedTree(tree2);
 
     REQUIRE(tree2.isOrderedRecursive() == true);
 }
 
 TEST_CASE("test_isOrderedIterative", "[weight=10]"){
-    vector<int> ordering;
-    ordering.resize(10);
-    for(size_t i = 0; i < ordering.size(); i++)
-        ordering[i] = i;
-    srand( 1234 );
-    random_shuffle(ordering.begin(), ordering.end());
-
-    BinaryTree<int> tree;
-    for (size_t i = 0; i < ordering.size(); i++)
-        tree.insert(ordering[i]);
+    BinaryTree<int> tree(genNonIsOrderedTree());
 
     REQUIRE(tree.isOrderedIterative() == false);
 
-    ordering.resize(12);
-    for (size_t i = 0; i < ordering.size(); i++)
-        ordering[i] = i;
-    srand( 1234 );
-    random_shuffle(ordering.begin(), ordering.end());
-
     BinaryTree<int> tree2;
-    for (size_t i = 0; i < ordering.size(); i++)
-        tree2.insert(ordering[i], true);
+    genIsOrderedTree(tree2);
 
     REQUIRE(tree2.isOrderedIterative() == true);
-
 }
 
 TEST_CASE("test_InorderTraversal", "[weight=10]"){
@@ -300,7 +205,7 @@ TEST_CASE("test_getPaths", "[weight=10]"){
 TEST_CASE("test_calcFromAST_simple", "[weight=10]"){
     std::string compute_str = "(5 + 3) * (90 - 3)";
     typename BinaryTree<std::string>::Node* root;
-    double res = pemdas_to_ast(compute_str, root);
+    double res = pemdasToAST(compute_str, root);
 
     AbstractSyntaxTree calc_tree(root);
 
@@ -310,7 +215,7 @@ TEST_CASE("test_calcFromAST_simple", "[weight=10]"){
 TEST_CASE("test_calcFromAST_intermediate", "[weight=10]"){
     std::string compute_str = "((28 + 69) * (45 / 3)) + (78643 - 10083 * 4)";
     typename BinaryTree<std::string>::Node* root;
-    double res = pemdas_to_ast(compute_str, root);
+    double res = pemdasToAST(compute_str, root);
 
     AbstractSyntaxTree calc_tree(root);
 
@@ -320,7 +225,7 @@ TEST_CASE("test_calcFromAST_intermediate", "[weight=10]"){
 TEST_CASE("test_calcFromAST_complex", "[weight=10]"){
     std::string compute_str = "(4 * (6 + (3 - 2) * 9 + 23)) + (1097 * (6784 / ((883 + 237) * 3))) + (70934 - (673 / (5  * (3 * 3))))";
     typename BinaryTree<std::string>::Node* root;
-    double res = pemdas_to_ast(compute_str, root);
+    double res = pemdasToAST(compute_str, root);
 
     AbstractSyntaxTree calc_tree(root);
 

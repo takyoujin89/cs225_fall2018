@@ -28,7 +28,7 @@ class AbstractSyntaxTree
         /**
          * Calculates the value from an AST (Abstract Syntax Tree).
          */
-        double eval();
+        double eval() const;
     private:
         // You may add any helper functions you like.....
 };
