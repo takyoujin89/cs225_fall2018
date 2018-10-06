@@ -341,47 +341,51 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
+  if(second==NULL) return first;
+  if(first==NULL) return second;
+  if(first==NULL&&second==NULL) return NULL;
   ListNode * a = first;
   ListNode * b = second;
   ListNode * c = NULL;
-  ListNode * p = NULL;
-  ListNode * q = NULL;
-  if((second==NULL)&&(first==NULL)){return NULL;}
-  if(second==NULL){return first;}
-  if(first==NULL){return second;}
-  if((second->data)<(first->data)){
-    p = b;
-    b = b->next;
-    p->next = a;
-    a->prev = b;
-  }
+//  ListNode * p = NULL;
+//  ListNode * q = NULL;
 
-    while(b!=NULL){
-    while((a->data)<(b->data)){
-      if(a->next!=NULL){a = a->next;}
+//take care of head case
+  if((b->data)<(a->data)){
+    c = b;
+    b = b->next;
+  }
+  else{
+    c = a;
+    a = a->next;
+  }
+  // so now c holds the list that starts smaller
+  //four cases, a is NULL or b is NULL, a<b, b<a
+  while (!(a==NULL) || !(b==NULL)){
+    if(b==NULL){ //if nothing in b, insert node from a
+      c->next = a;
+      a->prev = c;
+      c = c->next;
+      a = a ->next;}
+    else if(!(a==NULL)&&((a->data)<(b->data))){
+      //if something in b and a, and a<b, insert node from a
+          c->next = a;
+          a->prev = c;
+          c = c->next;
+          a = a ->next;
+        }
+// if nothing in a, or b<a, insert node from b
+    else {
+          c->next = b;
+          b->prev = c;
+          c = c->next;
+          b = b ->next;
     }
-    //tail condition of first list
-    if(a->next==NULL){
-      a->next = b;
-      b->prev = a;
-      break;
-    }
-    //link previous node to point to b
-    if(a->prev!=NULL){
-      q = a->prev;
-      q->next = b;
-    }
-    //a and b now points to correct nodes
-      b->prev = a->prev;
-      a->prev = b;
-      p = b;
-      b = b->next;
-      p->next = a;
-    //tail condition of second list
-    if(b==NULL){
-      break;
-    }} if((first->data)<(second->data)) return first;
-  return second; }
+  }
+//return based on head case
+ if((first->data)<(second->data)) return first;
+  return second;
+}
 /**
  * Sorts the current list by applying the Mergesort algorithm.
  */
