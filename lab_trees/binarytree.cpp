@@ -78,9 +78,19 @@ void BinaryTree<T>::printLeftToRight(const Node* subRoot) const
     template <typename T>
 void BinaryTree<T>::mirror()
 {
-    //your code here
+mirror(root);
 }
 
+
+template <typename T>
+void BinaryTree<T>::mirror(const Node* x){ //helper function for the mirror function
+  if(root ==NULL){return;}
+    Node * l = x->left;
+    x->left = x->right;
+    x->right = l;
+    mirror(x->left);
+    mirror(x->right);
+}
 
 /**
  * isOrdered() function iterative version
@@ -138,4 +148,3 @@ int BinaryTree<T>::sumDistances() const
     // your code here
     return -1;
 }
-

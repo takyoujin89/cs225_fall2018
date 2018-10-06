@@ -38,12 +38,15 @@ List<T>::~List() {
  */
 template <typename T>
 void List<T>::_destroy() {
+  if (head_!=NULL){
   ListNode * temp = head_;
   while (temp->next!=NULL)
   { temp = temp->next;
     delete temp->prev;
     length_--;
   }
+}
+    if(tail_!=NULL)
     delete tail_;
     head_ = NULL;
     tail_ = NULL;
@@ -284,8 +287,19 @@ List<T> List<T>::split(int splitPoint) {
  */
 template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
-  /// @todo Graded in MP3.2
-  return NULL;
+  ListNode * temp = start;
+  for (int i = 0; i<splitPoint; i++){
+    if(temp->next!=NULL){
+    temp = temp->next;}
+    if(temp->next == NULL)
+    break;
+  }
+  temp->prev->next = NULL;
+  tail_ = temp->prev;
+  temp->prev = NULL;
+
+
+  return temp;
 }
 
 /**
@@ -308,6 +322,7 @@ void List<T>::mergeWith(List<T> & otherList) {
 
     // empty out the parameter list
     otherList.head_ = NULL;
+
     otherList.tail_ = NULL;
     otherList.length_ = 0;
 }
@@ -326,9 +341,47 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
-  return NULL;
-}
+  ListNode * a = first;
+  ListNode * b = second;
+  ListNode * c = NULL;
+  ListNode * p = NULL;
+  ListNode * q = NULL;
+  if((second==NULL)&&(first==NULL)){return NULL;}
+  if(second==NULL){return first;}
+  if(first==NULL){return second;}
+  if((second->data)<(first->data)){
+    p = b;
+    b = b->next;
+    p->next = a;
+    a->prev = b;
+  }
 
+    while(b!=NULL){
+    while((a->data)<(b->data)){
+      if(a->next!=NULL){a = a->next;}
+    }
+    //tail condition of first list
+    if(a->next==NULL){
+      a->next = b;
+      b->prev = a;
+      break;
+    }
+    //link previous node to point to b
+    if(a->prev!=NULL){
+      q = a->prev;
+      q->next = b;
+    }
+    //a and b now points to correct nodes
+      b->prev = a->prev;
+      a->prev = b;
+      p = b;
+      b = b->next;
+      p->next = a;
+    //tail condition of second list
+    if(b==NULL){
+      break;
+    }} if((first->data)<(second->data)) return first;
+  return second; }
 /**
  * Sorts the current list by applying the Mergesort algorithm.
  */
@@ -353,6 +406,38 @@ void List<T>::sort() {
  */
 template <typename T>
 typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength) {
-  /// @todo Graded in MP3.2
-  return NULL;
+  if(start==NULL){return NULL;}
+  if(chainLength<=1){return start;}
+  int len = chainLength/2;
+  ListNode * a = start;
+  ListNode * b = split(start, len);
+  if(chainLength%2==1){
+  a=mergesort(a, len);
+  b=mergesort(b, len+1);}
+  else {
+    a=mergesort(a, len);
+    b=mergesort(b, len);
+  }
+
+  return merge(a, b);
 }
+
+/*  ListNode * a = start;
+  int len = chainLength/2;
+  ListNode * b = start;
+  //ListNode * c;
+  int counter = 0;
+  while(counter<len){
+    if(b->next!=NULL)
+    b=b->next;
+    counter++;
+  }
+  if(chainLength%2==1){
+  a=mergesort(a, len);
+  b=mergesort(b, len+1);}
+  else {
+    a=mergesort(a, len);
+    b=mergesort(b, len);
+  }
+
+  return merge(a, b);}*/
