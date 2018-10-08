@@ -103,7 +103,7 @@ int main(int argc, char** argv)
 
     basicAST.mirror();
     printASTInfo(basicAST, "Mirror of " + compute_string, "AST For Computing The Mirror of The Equation");
-	
+
     return 0;
 }
 
@@ -140,7 +140,7 @@ void printTreeInfo(const BinaryTree<T>& tree, const string& name,
     }
 
 	cout<<endl;
-	
+
 	cout << "preorder: ";
 	PreorderTraversal<int> pot(tree.getRoot());
 	for (TreeTraversal<int>::Iterator it = pot.begin(); it != pot.end(); ++it) {
@@ -179,7 +179,7 @@ void printASTInfo(const AbstractSyntaxTree& tree, const string& name,
     }
 
 	cout<<endl;
-	
+
 	cout << "preorder: ";
 	PreorderTraversal<std::string> pot(tree.getRoot());
 	for (TreeTraversal<std::string>::Iterator it = pot.begin(); it != pot.end(); ++it) {

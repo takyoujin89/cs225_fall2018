@@ -89,7 +89,7 @@ class BinaryTree
         /**
          * @return The root of the binary tree
          */
-        Node* getRoot() const;  
+        Node* getRoot() const;
 
         /**
          * This lab deals with the following six helper functions:
@@ -115,6 +115,8 @@ class BinaryTree
          *  (not creating a flipped copy).
          */
         void mirror();
+
+
 
         /**
          * isOrdered() function iterative version
@@ -167,13 +169,17 @@ class BinaryTree
         Node* root;
 
     private:
-
+        void mirror(Node* x);
+      // bool isOrderedRecursiveLeft(Node* x, T z) const;
+      //  bool isOrderedRecursiveRight(Node* x, T z) const;
+bool isOrderedRecursive(Node* x) const;
         /**
          * Put your own private helper functions here.
          * Look at the private helpers for height and printLeftToRight
          *  as examples.
-         */
-
+         template <typename T>
+        */
+    void getPaths(Node * x, vector<T> vec, vector<vector<T> > &paths) const;
         /**
          * Private helper function for the public height function.
          * @param subRoot The current node in the recursion

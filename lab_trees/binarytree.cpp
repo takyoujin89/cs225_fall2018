@@ -75,7 +75,7 @@ void BinaryTree<T>::printLeftToRight(const Node* subRoot) const
  * Flips the tree over a vertical axis, modifying the tree itself
  *  (not creating a flipped copy).
  */
-    template <typename T>
+template <typename T>
 void BinaryTree<T>::mirror()
 {
 mirror(root);
@@ -83,8 +83,8 @@ mirror(root);
 
 
 template <typename T>
-void BinaryTree<T>::mirror(const Node* x){ //helper function for the mirror function
-  if(root ==NULL){return;}
+void BinaryTree<T>::mirror(Node* x){ //helper function for the mirror function
+  if(x ==NULL){return;}
     Node * l = x->left;
     x->left = x->right;
     x->right = l;
@@ -101,8 +101,18 @@ void BinaryTree<T>::mirror(const Node* x){ //helper function for the mirror func
 template <typename T>
 bool BinaryTree<T>::isOrderedIterative() const
 {
-    // your code here
-    return false;
+    // your code
+    InorderTraversal<T> iot(root);
+    typename TreeTraversal<T>::Iterator a = iot.begin();
+    typename TreeTraversal<T>::Iterator b = a;
+    ++a;
+    while(a!=iot.end()){
+      if((*a)->elem < (*b)->elem)
+      return false;
+      b = a;
+      ++a;
+    }
+    return true;
 }
 
 /**
@@ -114,10 +124,54 @@ bool BinaryTree<T>::isOrderedIterative() const
 template <typename T>
 bool BinaryTree<T>::isOrderedRecursive() const
 {
-    // your code here
-    return false;
+    if(root==NULL){return true;}
+    //bool a = isOrderedRecursive(root, root->elem);
+    bool b = isOrderedRecursive(root);
+  //  if(a&&b) return true;
+    return b;
 }
+template <typename T>
+bool BinaryTree<T>::isOrderedRecursive(Node* x) const{
+  BinaryTree<T>::Node* curr = x;
+  bool yesno = true;
+  if(curr->right!=NULL){
+    if(curr->elem>curr->right->elem)
+    return false;
+    else yesno = yesno && isOrderedRecursive(curr->right);
+  }
+  if(curr->left!=NULL){
+    if(curr->elem<curr->left->elem)
+    return false;
+    else yesno = yesno && isOrderedRecursive(curr->left);
+  }
+  return yesno;
+}
+/*template <typename T>
+bool BinaryTree<T>::isOrderedRecursiveLeft(Node* x, T z) const{}
+typename BinaryTree<T>::Node* curr = x;
+  bool lefty = false;
+  if(curr==NULL){return true;}
+  if(curr->left==NULL && curr->right==NULL){return true;}
+  if((curr->left->elem < curr ->elem)&&(curr->left->elem<z)){
+    lefty = true;
+  }
+  lefty = lefty && isOrderedRecursiveLeft(curr->left, z) && isOrderedRecursiveRight(curr->right, z);
+  return lefty;
 
+}*/
+
+/*template <typename T>
+bool BinaryTree<T>::isOrderedRecursiveRight(Node * x, T y) const
+{ typename BinaryTree<T>::Node* curr = x;
+  bool righty = false;
+  if(curr==NULL){return true;}
+  if(curr->left==NULL && curr->right==NULL){return true;}
+  if((curr->elem < curr->right->elem)&&(y<curr->right->elem)){
+    righty = true;
+}
+  righty = righty && isOrderedRecursiveLeft(curr->left, y) && isOrderedRecursiveRight (curr->right, y);
+  return righty;
+}*/
 
 /**
  * creates vectors of all the possible paths from the root of the tree to any leaf
@@ -131,9 +185,25 @@ template <typename T>
 void BinaryTree<T>::getPaths(vector<vector<T> > &paths) const
 {
     // your code here
+    vector<T> vec;
+    getPaths(root, vec, paths);
 }
 
-
+template <typename T>
+void BinaryTree<T>::getPaths(Node* x, vector<T> vec, vector<vector<T> > &paths) const{
+    BinaryTree<T>::Node* curr = x;
+    if(curr==NULL){return;}
+    if(curr->right==NULL&&curr->left==NULL){
+      vec.push_back(curr->elem);
+      paths.push_back(vec);
+      return;
+    }
+      vec.push_back(curr->elem);
+      if(curr->left!=NULL)
+      getPaths(curr->left, vec, paths);
+      if(curr->right!=NULL)
+      getPaths(curr->right, vec, paths);
+      }
 /**
  * Each node in a tree has a distance from the root node - the depth of that
  * node, or the number of edges along the path from that node to the root. This
