@@ -193,11 +193,12 @@ template <typename T>
 void BinaryTree<T>::getPaths(Node* x, vector<T> vec, vector<vector<T> > &paths) const{
     BinaryTree<T>::Node* curr = x;
     if(curr==NULL){return;}
-    if(curr->right==NULL&&curr->left==NULL){
+    if(curr->right==NULL){
+      if(curr->left==NULL){
       vec.push_back(curr->elem);
       paths.push_back(vec);
       return;
-    }
+    }}
       vec.push_back(curr->elem);
       if(curr->left!=NULL)
       getPaths(curr->left, vec, paths);
@@ -216,5 +217,17 @@ template <typename T>
 int BinaryTree<T>::sumDistances() const
 {
     // your code here
-    return -1;
+    int totality = 0;
+    int edges = 0;
+    totality = sumDistances(totality, edges, root);
+    return totality;
+}
+template <typename T>
+int BinaryTree<T>::sumDistances(int &totality, int edges, Node* root) const{
+  if(root==NULL)return 0;
+  totality += edges;
+  edges = edges+1;
+  sumDistances(totality, edges, root->left);
+  sumDistances(totality, edges, root->right);
+  return totality;
 }

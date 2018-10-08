@@ -169,6 +169,7 @@ class BinaryTree
         Node* root;
 
     private:
+      int sumDistances(int &totality, int edges, Node* root) const;
         void mirror(Node* x);
       // bool isOrderedRecursiveLeft(Node* x, T z) const;
       //  bool isOrderedRecursiveRight(Node* x, T z) const;
