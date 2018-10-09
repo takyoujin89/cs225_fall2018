@@ -341,9 +341,10 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
+  if(first==NULL&&second==NULL) return NULL;
   if(second==NULL) return first;
   if(first==NULL) return second;
-  if(first==NULL&&second==NULL) return NULL;
+
   ListNode * a = first;
   ListNode * b = second;
   ListNode * c = NULL;
