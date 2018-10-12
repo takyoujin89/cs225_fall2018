@@ -77,6 +77,25 @@ HuffmanTree::TreeNode*
 HuffmanTree::removeSmallest(queue<TreeNode*>& singleQueue,
                             queue<TreeNode*>& mergeQueue)
 {
+  TreeNode * nodeee;
+  if (singleQueue.size()==0){
+    nodeee = mergeQueue.front();
+    mergeQueue.pop();
+  }
+  else if ( mergeQueue.size()==0){
+    nodeee = singleQueue.front();
+    singleQueue.pop();
+  }
+else if (singleQueue.front()->freq.getFrequency() < mergeQueue.front()->freq.getFrequency()){
+  nodeee = singleQueue.front();
+  singleQueue.pop();
+}
+else {
+  nodeee = mergeQueue.front();
+  mergeQueue.pop();
+}
+return nodeee;
+
 
     /**
      * @todo Your code here!
@@ -86,14 +105,18 @@ HuffmanTree::removeSmallest(queue<TreeNode*>& singleQueue,
      * smaller of the two queues heads is the smallest item in either of
      * the queues. Return this item after removing it from its queue.
      */
-    return NULL;
 }
 
 void HuffmanTree::buildTree(const vector<Frequency>& frequencies)
 {
     queue<TreeNode*> singleQueue; // Queue containing the leaf nodes
     queue<TreeNode*> mergeQueue;  // Queue containing the inner nodes
-
+    if(frequencies.size() ==0) return;
+    if(frequencies.size() ==1){
+      TreeNode * temper = new TreeNode(frequencies[0]);
+      mergeQueue.push(temper);
+      root_ = temper;
+    }
     /**
      * @todo Your code here!
      *
@@ -111,8 +134,21 @@ void HuffmanTree::buildTree(const vector<Frequency>& frequencies)
      * Finally, when there is a single node left, it is the root. Assign it
      * to the root and you're done!
      */
-
+     for (unsigned long i = 0; i<frequencies.size();i++){
+       TreeNode * temper = new TreeNode(frequencies[i]);
+       singleQueue.push(temper);
+     }
+     while(singleQueue.size()+mergeQueue.size()>1){
+      TreeNode * smaller = removeSmallest(singleQueue, mergeQueue);
+      TreeNode * bigger = removeSmallest(singleQueue, mergeQueue);
+      TreeNode * tempa = new TreeNode(smaller->freq.getFrequency()+bigger->freq.getFrequency());
+        tempa->left = smaller;
+        tempa->right = bigger;
+        mergeQueue.push(tempa);
+      }
+      root_ = mergeQueue.front();
 }
+
 
 string HuffmanTree::decodeFile(BinaryFileReader& bfile)
 {
@@ -125,6 +161,16 @@ void HuffmanTree::decode(stringstream& ss, BinaryFileReader& bfile)
 {
     TreeNode* current = root_;
     while (bfile.hasBits()) {
+      if(!(bfile.getNextBit())){
+        current = current->left;
+      }
+      else current = current->right;
+      if(current->left==NULL && current->right==NULL){
+        ss<<(current->freq.getCharacter());
+        current = root_;
+      }
+
+
         /**
          * @todo Your code here!
          *
@@ -146,6 +192,7 @@ void HuffmanTree::writeTree(BinaryFileWriter& bfile)
 
 void HuffmanTree::writeTree(TreeNode* current, BinaryFileWriter& bfile)
 {
+  if(current==NULL) return;
     /**
      * @todo Your code here!
      *
@@ -161,10 +208,33 @@ void HuffmanTree::writeTree(TreeNode* current, BinaryFileWriter& bfile)
      * version: this is fine, as the structure of the tree still reflects
      * what the relative frequencies were.
      */
+
+     if(current->left==NULL||current->right==NULL){
+       bfile.writeBit(1);
+       bfile.writeByte(current->freq.getCharacter());
+     }
+     else{
+    bfile.writeBit(0);
+    writeTree(current->left, bfile);
+    writeTree(current->right, bfile);
+
+}
 }
 
 HuffmanTree::TreeNode* HuffmanTree::readTree(BinaryFileReader& bfile)
 {
+  TreeNode * newNode;
+  if(!bfile.hasBits()) return NULL;
+  if(bfile.hasBits()){
+    if(bfile.getNextBit()){
+      newNode = new TreeNode(Frequency(bfile.getNextByte(), 0));
+      return newNode;
+    }
+    else{ newNode = new TreeNode(0);
+    newNode->left = readTree(bfile);
+    newNode->right = readTree(bfile);
+    return newNode;
+  }
     /**
      * @todo Your code here!
      *
@@ -182,7 +252,8 @@ HuffmanTree::TreeNode* HuffmanTree::readTree(BinaryFileReader& bfile)
      *         if it did not create one.
      */
 
-    return NULL;
+}
+return NULL;
 }
 
 void HuffmanTree::buildMap(TreeNode* current, vector<bool>& path)
