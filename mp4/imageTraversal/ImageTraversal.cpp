@@ -11,7 +11,7 @@
 /**
  * Calculates a metric for the difference between two pixels, used to
  * calculate if a pixel is within a tolerance.
- * 
+ *
  * @param p1 First pixel
  * @param p2 Second pixel
  * @return the difference between two HSLAPixels
@@ -25,7 +25,7 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
   if (h > 180) { h = 360 - h; }
   h /= 360;
 
-  return sqrt( (h*h) + (s*s) + (l*l) );    
+  return sqrt( (h*h) + (s*s) + (l*l) );
 }
 
 /**
@@ -33,6 +33,7 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
  */
 ImageTraversal::Iterator::Iterator() {
   /** @todo [Part 1] */
+  
 }
 
 /**
@@ -42,26 +43,29 @@ ImageTraversal::Iterator::Iterator() {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
+  //returns previous Point, not incremented one.
+
   return *this;
 }
 
 /**
  * Iterator accessor opreator.
- * 
+ *
  * Accesses the current Point in the ImageTraversal.
  */
 Point ImageTraversal::Iterator::operator*() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  return position;
 }
 
 /**
  * Iterator inequality operator.
- * 
+ *
  * Determines if two iterators are not equal.
  */
 bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
   /** @todo [Part 1] */
+  if(this->position == other.position)
   return false;
+  else return true;
 }
-
