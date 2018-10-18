@@ -32,7 +32,7 @@ class AVLTree
 {
   private:
     /**
-     * Node represents a tree node; that is, an element in a AVLTree.
+     * Node represents a tree node; that  else if (righty-lefty<-2){ is, an element in a AVLTree.
      * It stores a key, value, and pointers to its left and right children.
      */
     struct Node {
@@ -131,6 +131,7 @@ class AVLTree
     * Gets vector of function calls.
     */
     vector<string> getFunctionOrder();
+    int Max(Node* a, Node * b);
 
   private:
     /**
