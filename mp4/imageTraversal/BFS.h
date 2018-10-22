@@ -35,8 +35,5 @@ public:
 private:
   /** @todo [Part 1] */
   /** add private members here*/
-  PNG pic;
-  Point pnt;
-  double tol;
   queue<Point> q;
 };

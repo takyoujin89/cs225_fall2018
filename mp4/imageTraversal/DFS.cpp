@@ -22,11 +22,9 @@
  * @param tolerance If the current point is too different (difference larger than tolerance) with the start point,
  * it will not be included in this DFS
  */
-DFS::DFS(const PNG & png, const Point & start, double tolerance) {
+DFS::DFS(const PNG & png, const Point & start, double tolerance) : ImageTraversal(png, start, tolerance) {
   /** @todo [Part 1] */
-    pnt = start;
-    pic = png;
-    tol = tolerance;
+
     s.push(start);
 }
 
@@ -35,7 +33,7 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
  */
 ImageTraversal::Iterator DFS::begin() {
   /** @todo [Part 1] */
-  return ImageTraversal::Iterator();
+  return ImageTraversal::Iterator(this);
 }
 
 /**
