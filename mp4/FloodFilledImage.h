@@ -15,6 +15,7 @@
 #include "Animation.h"
 
 using namespace cs225;
+using namespace std;
 /**
  *This class is used to do flood fill on an image
  */
@@ -28,4 +29,7 @@ private:
 	/** @todo [Part 2] */
 	/** add private members here*/
 
+  vector<ImageTraversal*> trav;
+  vector<ColorPicker*> pick;
+  PNG picture;
 };
