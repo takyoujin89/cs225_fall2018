@@ -345,8 +345,16 @@ template <class T, class C>
 size_t insertion_idx(const std::vector<T>& elements, const C& val)
 {
     /* TODO Your code goes here! */
+    int x = 0;
+    if(elements.empty()) return 0;
+    if(elements.at(elements.size()-1)<val){return elements.size();}
+    for(unsigned i = 0; i<elements.size();i++){
+      x = i;
+      if(elements.at(i)== val){break;}
+      if(elements.at(i) > val) {break;}
+    }
 
-    return 5;
+      return x;
 }
 
 #include "btree_given.cpp"
