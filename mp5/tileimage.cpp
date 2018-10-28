@@ -134,8 +134,8 @@ LUVAPixel TileImage::getScaledPixelDouble(double startX, double endX,
     unsigned int startYint = static_cast<int>(startY);
     unsigned int endYint = static_cast<int>(ceil(endY));
 
-    if (endXint >= image_.width()) { endXint = image_.width() - 1; }
-    if (endYint >= image_.height()) { endYint = image_.height() - 1; }
+    if (endXint > image_.width()) { endXint = image_.width() - 1; }
+    if (endYint > image_.height()) { endYint = image_.height() - 1; }
 
     double sumX = 0, sumY = 0, sumZ = 0;
     double numPixels = 0;

@@ -24,7 +24,7 @@ namespace opts
 
 int main(int argc, const char** argv) {
     string inFile = "";
-    string tileDir = "/class/cs225/mp6_pngs/";
+    string tileDir = "/class/cs225/mp5_uiuc-ig/";
     string numTilesStr = "100";
     string pixelsPerTileStr = "50";
     string outFile = "mosaic.png";
