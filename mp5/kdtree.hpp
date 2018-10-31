@@ -139,6 +139,9 @@ KDTree<Dim>::KDTree(const KDTree<Dim>& other) {
   /**
    * @todo Implement this function!
    */
+   vect = other.vect;
+   size = other.size;
+   root = buildTree(vect, 0, vect.size()-1, 0);
 }
 
 template <int Dim>
@@ -146,7 +149,12 @@ const KDTree<Dim>& KDTree<Dim>::operator=(const KDTree<Dim>& rhs) {
   /**
    * @todo Implement this function!
    */
-
+   if(this!=&rhs){
+     annihilate_to_shreds_and_pieces(this);
+     vect = rhs.vect;
+     size = rhs.size;
+     root = buildTree(vect, 0, vect.size()-1, 0);
+   }
   return *this;
 }
 
@@ -155,6 +163,19 @@ KDTree<Dim>::~KDTree() {
   /**
    * @todo Implement this function!
    */
+   annihilate_to_shreds_and_pieces(root);
+}
+template<int Dim>
+void KDTree<Dim>::annihilate_to_shreds_and_pieces(KDTreeNode * root){
+  if(root!=NULL){
+    if(root->left!=NULL){
+      annihilate_to_shreds_and_pieces(root->left);
+    }
+    if(root->right!=NULL){
+      annihilate_to_shreds_and_pieces(root->right);
+    }
+    delete root;
+  }
 }
 
 template <int Dim>
@@ -163,6 +184,6 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
     /**
      * @todo Implement this function!
      */
-
+     
     return Point<Dim>();
 }
