@@ -43,6 +43,7 @@ class KDTree
     };
 
   public:
+
     /**
      * Determines if Point a is smaller than Point b in a given dimension d.
      * If there is a tie, break it with Point::operator<().
@@ -259,6 +260,10 @@ class KDTree
     /**
      * @todo Add your helper functions here.
      */
+     vector<Point<Dim>>vect;
+     KDTreeNode * buildTree( vector<Point<Dim>>&vect, int min, int max, int dim);
+     int partition( vector<Point<Dim>>&vect, int min, int max, int med, int dim);
+     void helper( vector<Point<Dim>>&vect, int min, int max, int median, int dim);
 };
 
 #include "kdtree.hpp"
