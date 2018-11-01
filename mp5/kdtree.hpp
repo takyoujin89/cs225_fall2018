@@ -195,6 +195,7 @@ Point<Dim> KDTree<Dim>::assistant(KDTreeNode* curr, Point<Dim>want, Point<Dim>re
     ret = curr->point;
     return ret;
   }
+
   if(smallerDimVal(want,curr->point,dim)){
     if(curr->left!=NULL){
       //dim = (dim+1)%Dim; // do the incrementation in the recursion call
@@ -217,10 +218,10 @@ Point<Dim> KDTree<Dim>::assistant(KDTreeNode* curr, Point<Dim>want, Point<Dim>re
   double currwantdist = (curr->point)[dim] - want[dim]; //distance between curr and want
   currwantdist = currwantdist*currwantdist;
   if(currwantdist<=retwantdist){
-    if(left){
+    if(left){ //left exists
       if(curr->right!=NULL){ //if right exists check right
         currentBest = assistant(curr->right, want, ret, (dim+1)%Dim);
-        if(shouldReplace(want, ret, currentBest)){
+        if(shouldReplace(want, ret, currentBest)){ //if currentBest is closer then use
           ret = currentBest;
         }
       }
@@ -228,7 +229,7 @@ Point<Dim> KDTree<Dim>::assistant(KDTreeNode* curr, Point<Dim>want, Point<Dim>re
     else{
       if(curr->left!=NULL){ //if left exists check left
       currentBest = assistant(curr->left, want, ret, (dim+1)%Dim);
-      if(shouldReplace(want, ret, currentBest)){
+      if(shouldReplace(want, ret, currentBest)){ //if currentBest is closer then use
         ret = currentBest;
       }
     }
