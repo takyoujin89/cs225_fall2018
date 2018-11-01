@@ -8,11 +8,12 @@
  */
 
 #include "schashtable.h"
- 
+
 using hashes::hash;
 using std::list;
 using std::pair;
-  
+
+
 template <class K, class V>
 SCHashTable<K, V>::SCHashTable(size_t tsize)
 {
@@ -57,11 +58,16 @@ SCHashTable<K, V>::SCHashTable(SCHashTable<K, V> const& other)
 template <class K, class V>
 void SCHashTable<K, V>::insert(K const& key, V const& value)
 {
-
+  ++elems;
+  if(shouldResize()){resizeTable();}
+  int index = hash(key, size);
+  pair<K,V>temp(key, value);
+  table[index].push_front(temp);
     /**
      * @todo Implement this function.
      *
      */
+
 }
 
 template <class K, class V>
@@ -74,13 +80,27 @@ void SCHashTable<K, V>::remove(K const& key)
      * Please read the note in the lab spec about list iterators and the
      * erase() function on std::list!
      */
-    (void) key; // prevent warnings... When you implement this function, remove this line.
+    //(void) key; // prevent warnings... When you implement this function, remove this line.
+    int index = hash(key, size);
+    typename list<pair<K,V>>::iterator i = table[index].begin();
+    for(;i!=table[index].end();++i){
+      if(i->first==key){
+        table[index].erase(i);
+        break;
+      }
+    }
 }
 
 template <class K, class V>
 V SCHashTable<K, V>::find(K const& key) const
 {
-
+    int index = hash(key, size);
+    typename list<pair<K,V>>::iterator i = table[index].begin();
+    for(; i!=table[index].end(); ++i){
+      if(i->first ==key){
+        return i->second;
+      }
+    }
     /**
      * @todo: Implement this function.
      */
@@ -142,4 +162,17 @@ void SCHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+     typename list<pair<K,V>>::iterator i;
+     size_t resized = findPrime(size*2);
+     list<pair<K,V>> * temptable = new list <pair<K,V>>[resized];
+     for (unsigned x = 0; x<size; x++){
+       for (i = table[x].begin();i!=table[x].end();i++ ){
+         int index = hash(i->first, resized);
+         pair<K,V> temp(i->first, i->second);
+         temptable[index].push_front(temp);
+       }
+     }
+     delete[] table;
+     table = temptable;
+     size = resized;
 }

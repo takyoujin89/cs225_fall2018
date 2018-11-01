@@ -89,8 +89,19 @@ void DHHashTable<K, V>::insert(K const& key, V const& value)
      *  forget to mark the cell for probing with should_probe!
      */
 
-    (void) key;   // prevent warnings... When you implement this function, remove this line.
-    (void) value; // prevent warnings... When you implement this function, remove this line.
+  //  (void) key;   // prevent warnings... When you implement this function, remove this line.
+  //  (void) value; // prevent warnings... When you implement this function, remove this line.
+  elems++;
+  if(shouldResize()){resizeTable();}
+  int index = hash(key, size);
+  pair<K,V> * temp = new pair<K,V>(key, value);
+  while(table[index]!=NULL){
+    int index2 = secondary_hash(key, size);
+    index = (index+index2)%size;
+  }
+  table[index] = temp;
+  should_probe[index] = true;
+
 }
 
 template <class K, class V>
@@ -99,6 +110,12 @@ void DHHashTable<K, V>::remove(K const& key)
     /**
      * @todo Implement this function
      */
+     int index = findIndex(key);
+     if(index!=-1){
+       delete table[index];
+       table[index] = NULL;
+       elems--;
+     }
 }
 
 template <class K, class V>
@@ -107,8 +124,21 @@ int DHHashTable<K, V>::findIndex(const K& key) const
     /**
      * @todo Implement this function
      */
+     int index = hash(key, size);
+     int temp = index;
+     while(should_probe[index]){
+       if(table[index]!=NULL){
+         if(table[index]->first == key)
+        return index;
+      }
+      int index2 = secondary_hash(key, size);
+      index = (index+index2)%size;
+      if(index == temp)
+      break;
+     }
+
     return -1;
-}
+ }
 
 template <class K, class V>
 V DHHashTable<K, V>::find(K const& key) const
@@ -168,7 +198,7 @@ void DHHashTable<K, V>::resizeTable()
             size_t h = hash(table[slot]->first, newSize);
             size_t jump = secondary_hash(table[slot]->first, newSize);
             size_t i = 0;
-            size_t idx = h; 
+            size_t idx = h;
             while (temp[idx] != NULL)
             {
                 ++i;
