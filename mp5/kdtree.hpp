@@ -128,7 +128,7 @@ void KDTree<Dim>::helper(vector<Point<Dim>>&vect, int min, int max, int median, 
     return;
   }
   else{
-    helper(vect, index+1, max, median, dim); //else index is more than median
+    helper(vect, index+1, max, median, dim); //else index is less than median
     return;
 }
 }
@@ -184,6 +184,60 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
     /**
      * @todo Implement this function!
      */
-     
-    return Point<Dim>();
+     return assistant(root, query, root->point, 0);
+
+  }
+template<int Dim>
+Point<Dim> KDTree<Dim>::assistant(KDTreeNode* curr, Point<Dim>want, Point<Dim>ret, int dim) const {
+  bool left = false;
+  Point<Dim> currentBest;
+  if(curr->left==NULL && curr->right==NULL){ //if we are at a leaf node, there are no better options
+    ret = curr->point;
+    return ret;
+  }
+  if(smallerDimVal(want,curr->point,dim)){
+    if(curr->left!=NULL){
+      //dim = (dim+1)%Dim; // do the incrementation in the recursion call
+      ret = assistant(curr->left, want, ret, (dim+1)%Dim); // recurse into the left subtree;
+      left = true;
+    }
+  }
+  if(smallerDimVal(curr->point, want, dim)){
+    if(curr->right!=NULL){
+      //dim = (dim+1)&Dim;
+      ret = assistant(curr->right, want, ret, (dim+1)%Dim); //recurse into the right subtree;
+    }
+  }
+  double retwantdist = 0; //distance between ret and want
+  for (int i = 0; i < Dim; i++){
+    double x = want[i] - ret[i];
+    x = x*x;
+    retwantdist+=x;
+  }
+  double currwantdist = (curr->point)[dim] - want[dim]; //distance between curr and want
+  currwantdist = currwantdist*currwantdist;
+  if(currwantdist<=retwantdist){
+    if(left){
+      if(curr->right!=NULL){ //if right exists check right
+        currentBest = assistant(curr->right, want, ret, (dim+1)%Dim);
+        if(shouldReplace(want, ret, currentBest)){
+          ret = currentBest;
+        }
+      }
+    }
+    else{
+      if(curr->left!=NULL){ //if left exists check left
+      currentBest = assistant(curr->left, want, ret, (dim+1)%Dim);
+      if(shouldReplace(want, ret, currentBest)){
+        ret = currentBest;
+      }
+    }
+  }
+}
+  if(shouldReplace(want, ret, curr->point)){
+    ret = curr->point;
+  }
+
+return ret;
+
 }

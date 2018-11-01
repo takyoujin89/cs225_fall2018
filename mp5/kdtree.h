@@ -265,6 +265,7 @@ class KDTree
      int partition( vector<Point<Dim>>&vect, int min, int max, int med, int dim);
      void helper( vector<Point<Dim>>&vect, int min, int max, int median, int dim);
      void annihilate_to_shreds_and_pieces(KDTreeNode * root);
+     Point<Dim> assistant(KDTreeNode* curr, Point<Dim>want, Point<Dim>ret, int dim) const;
 };
 
 #include "kdtree.hpp"
