@@ -50,7 +50,7 @@ void helpTestUpdateElem(vector<int> vals)
 
     if (vals.size() > 0) {
         vals[min_idx] = (second_greatest + greatest) / 2;
-        _heap.updateElem(_heap.root(), vals[min_idx]);
+        _heap.updateElem(0, vals[min_idx]);
     }
 
     vector<int> sorted = vals;
@@ -58,7 +58,7 @@ void helpTestUpdateElem(vector<int> vals)
 
     for(size_t i = 0; i < sorted.size(); i++) {
         if (i + 2 == sorted.size()) {
-            _heap.updateElem(_heap.root() + 1, sorted[i] - 1);
+            _heap.updateElem(1, sorted[i] - 1);
             sorted[i+1] = sorted[i] - 1;
             swap(sorted[i], sorted[i+1]);
         }
