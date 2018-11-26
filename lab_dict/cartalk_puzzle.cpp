@@ -9,7 +9,7 @@
 #include <fstream>
 
 #include "cartalk_puzzle.h"
-
+#include <tuple>
 using namespace std;
 
 /**
@@ -26,5 +26,26 @@ vector<std::tuple<std::string, std::string, std::string>> cartalk_puzzle(Pronoun
     vector<std::tuple<std::string, std::string, std::string>> ret;
 
     /* Your code goes here! */
+    vector<string> wordbank;
+    ifstream wordsFile(word_list_fname);
+    string word;
+    if (wordsFile.is_open()) {
+    /* Reads a line from `wordsFile` into `word` until the file ends. */
+    while (getline(wordsFile, word)) {
+          if(word.length()==5)
+            wordbank.push_back(word);
+        }
+    }
+    for(auto& i : wordbank){
+      string minusfirst = i.substr(1);
+      string minussecond;
+      minussecond.append(i.begin(), i.begin()+1);
+      minussecond.append(minusfirst.begin()+1, minusfirst.end());
+      if(d.homophones(minusfirst, minussecond) && d.homophones(i, minusfirst) && d.homophones(i, minussecond)){
+        tuple<string, string, string> yes(i, minusfirst, minussecond);
+        //yes.make_tuple(i, minusfirst, minussecond);
+        ret.push_back(yes);
+      }
+      }
     return ret;
 }
