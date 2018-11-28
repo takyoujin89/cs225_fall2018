@@ -1,5 +1,5 @@
 
-/**
+
 #include "../cs225/catch/catch.hpp"
 #include <iostream>
 #include <fstream>
@@ -349,5 +349,4 @@ TEST_CASE("testDrawSolutionLarge", "[weight=10][part2]")
 	actualOutput->writeToFile("testDrawSolutionLarge"+ string(".png"));
 	REQUIRE(*actualOutput == solnImage);
 }
- */
-
+ 

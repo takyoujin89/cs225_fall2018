@@ -25,11 +25,13 @@ void setWall(int x, int y, int dir, bool exists);
 vector<int> solveMaze();
 PNG * drawMaze() const;
 PNG * drawMazeWithSolution();
-vector<int>walls;
+vector<int>Down;
+vector<int>Right;
 private:
 int width_;
 int height_;
 int size_;
+
 
 
 };
