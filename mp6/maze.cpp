@@ -19,14 +19,14 @@ while(i<size_-1){
   int random_wall = rand()%2; //which wall to rmove?
   int random_x = rand()%width_; //where?
   int random_y = rand()%height_;
-  if(random_wall){
+  if(random_wall){ //if random wall is true
     if(random_x < width_ -1 && Right[random_x+random_y*width_] && path.find(random_x+random_y*width_) != path.find(random_x+random_y*width_+1)){
       Right[random_x+random_y*width_] = 0;
       path.setunion(path.find(random_x+random_y*width_), path.find(random_x+random_y*width_+1));
       i++;
     }
   }
-  else{
+  else{ //if random wall is false
     if(random_y < height_-1 && Down[random_x+random_y*width_]&&path.find(random_x+random_y*width_) != path.find(random_x+(random_y+1)*width_)){
       Down[random_x+random_y*width_] = 0;
       path.setunion(path.find(random_x+random_y*width_), path.find(random_x+(1+random_y)*width_));
@@ -42,17 +42,21 @@ bool SquareMaze::canTravel(int x, int y, int dir) const {
 // 1 = right wall
 // 2 = down wall
 // 3 = down and right walls
-if (dir == 0) return !(Right[x+y*width_]);
-
-if (dir == 1) return !(Down[x+y*width_]);
+if (dir == 0) {
+  return !(Right[x+y*width_]);}
+if (dir == 1) {
+  return !(Down[x+y*width_]); }
 if (dir == 2){
-  if (x == 0) return false;
-  else return !(Right[x-1+y*width_]);
-}if (dir == 3){
+  if (x == 0) {
+    return false;}
+  else {
+    return !(Right[x-1+y*width_]);}
+}
+if (dir == 3){
   if (y == 0)
-    return false;
+    {return false;}
   else
-    return !(Down[x + (y-1) * width_]);}
+    {return !(Down[x + (y-1) * width_]);}}
 
 return false;
 }
@@ -93,7 +97,7 @@ vector<int> SquareMaze::solveMaze() { //BFS approach
       int y = temp/width_;
       if(y==height_-1)
       vect.push_back(temp);
-
+//various situations
       if(canTravel(x,y,0) && !yesno[temp+1]){
         mom.insert(pair<int,int>(temp+1, temp));
         yesno[temp+1] = true;
@@ -115,6 +119,7 @@ vector<int> SquareMaze::solveMaze() { //BFS approach
         q.push(temp-width_);
       }
     }
+    //backtrack for best path
     vector<int>vect2;
     int temp = width_-1;
     while(vect[temp] == vect[temp-1]){
@@ -132,6 +137,7 @@ vector<int> SquareMaze::solveMaze() { //BFS approach
         vect2.push_back(3);
         temp2 = temp3;
       }
+      //reverse backtrack
       reverse(vect2.begin(), vect2.end());
       return vect2;
     }
@@ -139,21 +145,21 @@ vector<int> SquareMaze::solveMaze() { //BFS approach
 
 PNG* SquareMaze::drawMaze() const{ //draws maze without solution
     PNG* maize = new PNG(width_*10+1, height_*10+1);
-
+//blacken left
     for (int i = 0; i < height_*10+1; i++){
               HSLAPixel &pix = maize->getPixel(0, i);
               pix.h = 0;
               pix.s = 0;
               pix.l = 0;
             }
-
+//blacken top
     for (int i = 10; i < width_*10+1; i++){
               HSLAPixel &pix = maize->getPixel(i, 0);
               pix.h = 0;
               pix.s = 0;
               pix.l = 0;
             }
-
+//blacken walls
     for (int x = 0; x < width_; x++){
         for (int y = 0; y < height_; y++){
               if (Right[x+y*width_]){
