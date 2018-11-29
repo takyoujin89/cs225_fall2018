@@ -99,7 +99,7 @@ const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const std::
 
 
 /**
-* Removes an Edge from the adjacency list
+* Return whether the two vertices are adjacent to one another
 * @param key1 The key of the source Vertex
 * @param key2 The key of the destination Vertex
 * @return True if v1 is adjacent to v2, False otherwise

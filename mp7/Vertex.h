@@ -17,7 +17,7 @@ class Vertex {
     }
 
     /**
-     * Retruns `true` if the Vertex has the same `key` as `other`.
+     * Returns `true` if the Vertex has the same `key` as `other`.
      */
     bool operator==(const Vertex & other) const {
       return key_ == other.key_;

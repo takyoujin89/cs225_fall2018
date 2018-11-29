@@ -72,7 +72,7 @@ const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const V & v
 
 
 /**
-* Removes an Edge from the adjacency list
+ * Return whether the two vertices are adjacent to one another
 * @param v1 The source Vertex
 * @param v2 The destination Vertex
 * @return True if v1 is adjacent to v2, False otherwise
