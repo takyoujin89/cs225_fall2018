@@ -79,4 +79,5 @@ public:
 private:
   Graph g_;
   Vertex startingVertex_;
+  unsigned number_token;
 };

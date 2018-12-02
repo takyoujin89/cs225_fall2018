@@ -5,6 +5,8 @@
 
 #include "NimLearner.h"
 #include <ctime>
+#include<vector>
+#include<string>
 
 
 /**
@@ -26,8 +28,28 @@
  */
 NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
     /* Your code goes here! */
+    for(unsigned int i = 0; i<=startingTokens;i++){
+    Vertex p1;
+    Vertex p2;
+    g_.insertVertex("p1-" + to_string(i));
+    g_.insertVertex("p2-" + to_string(i));
 }
+  for(unsigned int i = startingTokens; i>1; i--){
+    g_.insertEdge("p1-"+to_string(i), "p2-"+to_string(i-2));
+    g_.setEdgeWeight("p1-"+to_string(i), "p2-"+to_string(i-2),0);
+    g_.insertEdge("p2-"+to_string(i), "p1-"+to_string(i-2));
+    g_.setEdgeWeight("p2-"+to_string(i), "p1-"+to_string(i-2),0);
+    }
+    for(unsigned int i = startingTokens; i>0; i--){
+      g_.insertEdge("p1-"+to_string(i), "p2-"+to_string(i-1));
+      g_.setEdgeWeight("p1-"+to_string(i), "p2-"+to_string(i-1),0);
+      g_.insertEdge("p2-"+to_string(i), "p1-"+to_string(i-1));
+      g_.setEdgeWeight("p2-"+to_string(i), "p1-"+to_string(i-1),0);
+      }
 
+  startingVertex_="p1-"+to_string(startingTokens);
+  number_token = startingTokens;
+}
 /**
  * Plays a random game of Nim, returning the path through the state graph
  * as a vector of `Edge` classes.  The `origin` of the first `Edge` must be
@@ -40,6 +62,25 @@ NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
 std::vector<Edge> NimLearner::playRandomGame() const {
   vector<Edge> path;
  /* Your code goes here! */
+ string player = "p2-";
+ int token = number_token;
+ Vertex vx = startingVertex_;
+
+ while(token>0){
+   int random = rand()%2+1;
+   if(token==1){
+     random = 1;
+   }
+   Vertex next = player+to_string(token-random);
+   path.push_back(g_.getEdge(vx,next));
+   vx = next;
+   if(player == "p1-"){
+     player = "p2-";
+   }
+   else(player = "p1-");
+
+   token = token - random;
+    }
   return path;
 }
 
@@ -61,6 +102,37 @@ std::vector<Edge> NimLearner::playRandomGame() const {
  */
 void NimLearner::updateEdgeWeights(const std::vector<Edge> & path) {
  /* Your code goes here! */
+ int size = path.size()-1;
+ Edge last = path[size];
+ Vertex lastvx = last.dest;
+ if(lastvx=="p2-0"){
+   for(int i = 0; i<=size; i++){
+     Edge currvx = path[i];
+     if(i%2==0){
+       int curr = g_.getEdgeWeight(currvx.source, currvx.dest);
+       g_.setEdgeWeight(currvx.source, currvx.dest, curr +1);
+     }
+     else{
+       int curr = g_.getEdgeWeight(currvx.source, currvx.dest);
+       g_.setEdgeWeight(currvx.source, currvx.dest, curr-1);
+     }
+   }
+   return;
+ }
+  else{
+    for(int i = 0; i<=size; i++){
+      Edge currvx = path[i];
+      if(i%2==1){
+        int curr = g_.getEdgeWeight(currvx.source, currvx.dest);
+        g_.setEdgeWeight(currvx.source, currvx.dest, curr +1);
+      }
+      else{
+        int curr = g_.getEdgeWeight(currvx.source, currvx.dest);
+        g_.setEdgeWeight(currvx.source, currvx.dest, curr-1);
+      }
+    }
+  }
+
 }
 
 /**
