@@ -1,1 +1,0 @@
-Zoey travels through the narrow passageway.
