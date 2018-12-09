@@ -11,6 +11,8 @@
 #include "edge.h"
 
 #include "NetworkFlow.h"
+#include <iostream>
+using namespace std;
 
 int min(int a, int b) {
   if (a<b)
@@ -22,6 +24,27 @@ NetworkFlow::NetworkFlow(Graph & startingGraph, Vertex source, Vertex sink) :
   g_(startingGraph), residual_(Graph(true,true)), flow_(Graph(true,true)), source_(source), sink_(sink) {
 
   // YOUR CODE HERE
+  maxFlow_ = 0;
+  vector<Edge> edges = startingGraph.getEdges();
+  vector<Vertex> vertices = startingGraph.getVertices();
+  for(unsigned long i = 0; i<vertices.size(); i++){
+    flow_.insertVertex(vertices[i]);
+    residual_.insertVertex(vertices[i]);
+  }
+  for(unsigned long i = 0; i<edges.size(); i++){
+    flow_.insertEdge(edges[i].source, edges[i].dest);
+    cout<<edges[i].source<<endl;
+    cout<<edges[i].dest<<endl;
+    cout<<"inserted"<<endl;
+    residual_.insertEdge(edges[i].source, edges[i].dest);
+    residual_.insertEdge(edges[i].dest, edges[i].source);
+  }
+  for(unsigned long i = 0; i<edges.size(); i++){
+    flow_.setEdgeWeight(edges[i].source, edges[i].dest, 0);
+    residual_.setEdgeWeight(edges[i].source, edges[i].dest, startingGraph.getEdgeWeight(edges[i].source, edges[i].dest));
+    residual_.setEdgeWeight(edges[i].dest, edges[i].source, 0);
+  }
+
 }
 
   /**
@@ -34,7 +57,7 @@ NetworkFlow::NetworkFlow(Graph & startingGraph, Vertex source, Vertex sink) :
    * @@params: visited -- A set of vertices we have visited
    */
 
-bool NetworkFlow::findAugmentingPath(Vertex source, Vertex sink, 
+bool NetworkFlow::findAugmentingPath(Vertex source, Vertex sink,
   std::vector<Vertex> &path, std::set<Vertex> &visited) {
 
   if (visited.count(source) != 0)
@@ -84,7 +107,16 @@ bool NetworkFlow::findAugmentingPath(Vertex source, Vertex sink, std::vector<Ver
 
 int NetworkFlow::pathCapacity(const std::vector<Vertex> & path) const {
   // YOUR CODE HERE
-  return 0;
+  int min = residual_.getEdge(path[0], path[1]).getWeight();
+  cout<<min<<endl;
+  for(unsigned long i = 1; i<path.size()-1; i++){
+    if(residual_.getEdge(path[i], path[i+1]).getWeight() < min){
+      min = residual_.getEdge(path[i], path[i+1]).getWeight();
+      cout<<min<<endl;
+    }
+  }
+
+  return min;
 }
 
   /**
@@ -97,6 +129,34 @@ int NetworkFlow::pathCapacity(const std::vector<Vertex> & path) const {
 
 const Graph & NetworkFlow::calculateFlow() {
   // YOUR CODE HERE
+  vector<Vertex> path;
+  while(findAugmentingPath(source_, sink_, path)){
+    int cap = pathCapacity(path);
+    if(cap == 0) break;
+    for(unsigned long i = 0; i <path.size()-1;i++){
+      Edge tempedge = flow_.getEdge(path[i], path[i+1]);
+      int currweight = flow_.getEdgeWeight(path[i], path[i+1]);
+      if(path[i]!= tempedge.source){
+        Vertex tempvert = path[i];
+        path[i] = path[i+1];
+        path[i+1] = tempvert;
+        flow_.setEdgeWeight(path[i], path[i+1], currweight - cap);
+      }
+      else{
+        flow_.setEdgeWeight(path[i], path[i+1], currweight + cap);
+      }
+      int forweight = residual_.getEdgeWeight(path[i], path[i+1]);
+      int revweight = residual_.getEdgeWeight(path[i+1], path[i]);
+      residual_.setEdgeWeight(path[i], path[i+1], forweight - cap);
+      residual_.setEdgeWeight(path[i+1], path[i], revweight + cap);
+    }
+  }
+  vector<Vertex> out = flow_.getAdjacent(flow_.getStartingVertex());
+  for(unsigned long i = 0; i<out.size(); i++){
+    int wait = flow_.getEdgeWeight(flow_.getStartingVertex(), out[i]);
+    maxFlow_+=wait;
+    cout<<maxFlow_<<endl;
+  }
   return flow_;
 }
 
@@ -115,4 +175,3 @@ const Graph & NetworkFlow::getFlowGraph() const {
 const Graph & NetworkFlow::getResidualGraph() const {
   return residual_;
 }
-
