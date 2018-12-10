@@ -4,14 +4,17 @@
 
 #include <string>
 #include <iostream>
+#include<unordered_map>
+using std::unordered_map;
+using std::make_pair;
+using namespace std;
 
 /**
 * @return The number of vertices in the Graph
 */
 template <class V, class E>
 unsigned int Graph<V,E>::size() const {
-  // TODO: Part 2
-  return 0;
+  return vertexMap.bucket_count();
 }
 
 
@@ -21,8 +24,14 @@ unsigned int Graph<V,E>::size() const {
 */
 template <class V, class E>
 unsigned int Graph<V,E>::degree(const V & v) const {
-  // TODO: Part 2
-  return 0;
+  auto i = vertexMap.begin();
+  int x = 0;
+  for(; x<vertexMap.bucket_count();x++){
+    if(*i->second == v) break;
+    i++;
+  }
+  if(x==vertexMap.bucket_count()) return -1;
+  else return vertexMap.bucket_size(x);
 }
 
 
@@ -33,9 +42,12 @@ unsigned int Graph<V,E>::degree(const V & v) const {
 */
 template <class V, class E>
 V & Graph<V,E>::insertVertex(std::string key) {
-  // TODO: Part 2
-  V & v = *(new V(key));
-  return v;
+  V & vx = *(new V(key));
+  removeVertex(vx);
+  //vertexMap.insert(make_pair(key, vx));
+  edgeListIter tempedgeit;
+  //adjList.insert(make_pair(key, tempedgeit));
+  return vx;
 }
 
 
@@ -45,7 +57,9 @@ V & Graph<V,E>::insertVertex(std::string key) {
 */
 template <class V, class E>
 void Graph<V,E>::removeVertex(const std::string & key) {
-  // TODO: Part 2
+  auto i =vertexMap.find(key);
+  if (i==vertexMap.end()) return;
+  else vertexMap.erase(key);
 }
 
 
@@ -70,8 +84,13 @@ E & Graph<V,E>::insertEdge(const V & v1, const V & v2) {
 * @param key2 The key of the destination Vertex
 */
 template <class V, class E>
-void Graph<V,E>::removeEdge(const std::string key1, const std::string key2) {  
-  // TODO: Part 2
+void Graph<V,E>::removeEdge(const std::string key1, const std::string key2){
+  V v1 = *vertexMap.find(key1)->second;
+  V v2 = *vertexMap.find(key2)->second;
+  E edd = E(v1, v2);
+  auto i = edgeList.find(edgeList.begin(), edgeList.end(), edd);
+  if (i==edgeList.end()) return;
+  else edgeList.erase(i);
 }
 
 
@@ -81,8 +100,8 @@ void Graph<V,E>::removeEdge(const std::string key1, const std::string key2) {
 * you would like to remove
 */
 template <class V, class E>
-void Graph<V,E>::removeEdge(const edgeListIter & it) {
-  // TODO: Part 2
+void Graph<V,E>::removeEdge(const edgeListIter & it){
+  edgeList.erase(it);
 }
 
 
@@ -90,7 +109,7 @@ void Graph<V,E>::removeEdge(const edgeListIter & it) {
 * @param key The key of an arbitrary Vertex "v"
 * @return The list edges (by reference) that are adjacent to "v"
 */
-template <class V, class E>  
+template <class V, class E>
 const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const std::string key) const {
   // TODO: Part 2
   std::list<std::reference_wrapper<E>> edges;
@@ -106,6 +125,11 @@ const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const std::
 */
 template <class V, class E>
 bool Graph<V,E>::isAdjacent(const std::string key1, const std::string key2) const {
-  // TODO: Part 2
-  return false;
+  V v1 = *vertexMap.find(key1)->second;
+  V v2 = *vertexMap.find(key2)->second;
+  E edd = E(v1, v2);
+  auto i = edgeList.find(edgeList.begin(), edgeList.end(), edd);
+  if (i==edgeList.end()) return false;
+
+  return true;
 }
