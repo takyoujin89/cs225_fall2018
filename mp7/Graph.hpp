@@ -14,7 +14,7 @@ using namespace std;
 */
 template <class V, class E>
 unsigned int Graph<V,E>::size() const {
-  return vertexMap.bucket_count();
+  return vertexMap.size();
 }
 
 
@@ -43,10 +43,10 @@ unsigned int Graph<V,E>::degree(const V & v) const {
 template <class V, class E>
 V & Graph<V,E>::insertVertex(std::string key) {
   V & vx = *(new V(key));
-  removeVertex(vx);
-  //vertexMap.insert(make_pair(key, vx));
-  edgeListIter tempedgeit;
-  //adjList.insert(make_pair(key, tempedgeit));
+  removeVertex(key);
+  vertexMap.insert(pair<string, V&>(key, vx));
+  list<edgeListIter> templist = * new list<edgeListIter>;
+  adjList.insert(pair<string, list<edgeListIter>>(key, templist));
   return vx;
 }
 
@@ -57,9 +57,7 @@ V & Graph<V,E>::insertVertex(std::string key) {
 */
 template <class V, class E>
 void Graph<V,E>::removeVertex(const std::string & key) {
-  auto i =vertexMap.find(key);
-  if (i==vertexMap.end()) return;
-  else vertexMap.erase(key);
+  vertexMap.erase(key);
 }
 
 
@@ -71,10 +69,25 @@ void Graph<V,E>::removeVertex(const std::string & key) {
 */
 template <class V, class E>
 E & Graph<V,E>::insertEdge(const V & v1, const V & v2) {
-  // TODO: Part 2
-  E & e = *(new E(v1, v2));
+  E & edd = *(new E(v1, v2));
+  auto tempeli = ref(edd);
+  edgeList.push_back(tempeli);
+  auto i = edgeList.end();
+  i--;
+  string x = "";
+  string y = "";
+  for(auto it = vertexMap.begin(); it!=vertexMap.end(); it++){
+    if(it->second == v1) {
+      x = it->first;
 
-  return e;
+      break;
+    }
+  }
+
+  list<edgeListIter> templist = adjList.at(x);
+  templist.push_back(i);
+
+  return edd;
 }
 
 
@@ -85,13 +98,18 @@ E & Graph<V,E>::insertEdge(const V & v1, const V & v2) {
 */
 template <class V, class E>
 void Graph<V,E>::removeEdge(const std::string key1, const std::string key2){
-  V v1 = *vertexMap.find(key1)->second;
-  V v2 = *vertexMap.find(key2)->second;
+  V v1 = vertexMap.at(key1);
+  V v2 = vertexMap.at(key2);
   E edd = E(v1, v2);
-  auto i = edgeList.find(edgeList.begin(), edgeList.end(), edd);
-  if (i==edgeList.end()) return;
-  else edgeList.erase(i);
-}
+  auto i = edgeList.begin();
+  for(;i!=edgeList.end();i++){
+    if((*i).get()==edd){
+      edgeList.erase(i);
+      return;
+    }
+  }
+  return;
+  }
 
 
 /**
@@ -111,8 +129,18 @@ void Graph<V,E>::removeEdge(const edgeListIter & it){
 */
 template <class V, class E>
 const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const std::string key) const {
-  // TODO: Part 2
   std::list<std::reference_wrapper<E>> edges;
+/*  list<edgeListIter> edgy = adjList.at(key);
+  for(typename list<edgeListIter>::iterator i = edgy.begin(); i!=edgy.end();i++){
+    cout<<"aye"<<endl;
+    edges.push_back((**i));
+  }
+*/
+  auto it = edgeList.begin();
+  for(; it != edgeList.end(); it++){
+    if((*it).get().source() == key) edges.push_back(*it);
+    if((*it).get().dest()==key) edges.push_back(*it);
+  }
   return edges;
 }
 
@@ -125,11 +153,15 @@ const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const std::
 */
 template <class V, class E>
 bool Graph<V,E>::isAdjacent(const std::string key1, const std::string key2) const {
-  V v1 = *vertexMap.find(key1)->second;
-  V v2 = *vertexMap.find(key2)->second;
+  V v1 = vertexMap.at(key1);
+  V v2 = vertexMap.at(key2);
   E edd = E(v1, v2);
-  auto i = edgeList.find(edgeList.begin(), edgeList.end(), edd);
-  if (i==edgeList.end()) return false;
+  auto i = edgeList.begin();
+  for(;i!=edgeList.end();i++){
+    if((*i).get()==edd){
+      return true;
+    }
+  }
 
-  return true;
+  return false;
 }

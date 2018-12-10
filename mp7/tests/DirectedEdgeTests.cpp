@@ -9,7 +9,7 @@ TEST_CASE("Graphs with `DirectedEdge`s have directed edges", "[weight=1]") {
   g.insertVertex("a");
   g.insertVertex("b");
   g.insertEdge("a", "b");
-  
+
   REQUIRE( g.incidentEdges("a").front().get().directed() == true );
 }
 
@@ -18,7 +18,7 @@ TEST_CASE("Graphs::isAdjacent with `DirectedEdge`s finds the directed edge", "[w
   Vertex a = g.insertVertex("a");
   Vertex b = g.insertVertex("b");
   g.insertEdge("a", "b");
-  
+
   REQUIRE( g.isAdjacent(a, b) == true );
 }
 
@@ -27,6 +27,6 @@ TEST_CASE("Graphs::isAdjacent with `DirectedEdge`s does not find the directed ed
   Vertex a = g.insertVertex("a");
   Vertex b = g.insertVertex("b");
   g.insertEdge("a", "b");
-  
+
   REQUIRE( g.isAdjacent(b, a) == false );
 }
