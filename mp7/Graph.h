@@ -13,6 +13,7 @@
 template <class V = Vertex, class E = Edge>
 class Graph {
   typedef std::reference_wrapper<E> E_byRef;
+  typedef std::reference_wrapper<V> V_byRef;
   typedef typename std::list<E_byRef>::iterator edgeListIter;
 
   public:
@@ -43,6 +44,9 @@ class Graph {
     bool isAdjacent(const std::string key1, const std::string key2) const;
     bool isAdjacent(const V & v1, const V & v2) const;
 
+    // Graph algorithm:
+    std::list<std::string> shortestPath(const std::string start, const std::string end);
+
     // stream<< printer
     friend std::ostream & operator<<(std::ostream & out, const Graph<V,E> & g) {
       out << "Graph(|V|=" << g.size() << ", |E|=" << g.edges() << "):" << std::endl;
@@ -70,3 +74,4 @@ class Graph {
 
 #include "Graph-given.hpp"
 #include "Graph.hpp"
+#include "Graph2.hpp"
