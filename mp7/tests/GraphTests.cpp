@@ -11,7 +11,7 @@ Graph<Vertex, Edge> createTestGraph() {
         /  | _/           |
       a -- c -- e    f -- g
         \_   _/
-           d 
+           d
   */
 
   Graph<Vertex, Edge> g;
@@ -58,7 +58,7 @@ TEST_CASE("Graph::size returns the vertex count", "[weight=1]") {
   Graph<Vertex, Edge> g;
 
   g.insertVertex("a");
-  g.insertVertex("b");  
+  g.insertVertex("b");
   REQUIRE( g.size() == 2 );
 
   g.insertVertex("c");
@@ -71,7 +71,7 @@ TEST_CASE("Graph::edges::size returns the edge count", "[weight=1]") {
   Graph<Vertex, Edge> g;
 
   g.insertVertex("a");
-  g.insertVertex("b");  
+  g.insertVertex("b");
   g.insertVertex("c");
   g.insertVertex("d");
   g.insertVertex("e");
@@ -83,6 +83,27 @@ TEST_CASE("Graph::edges::size returns the edge count", "[weight=1]") {
   g.insertEdge("a", "e");
 
   REQUIRE( g.edges() == 3 );
+}
+TEST_CASE("remove vertex"){
+  Graph<Vertex, Edge> g;
+  g.insertVertex("a");
+  g.insertVertex("b");
+  g.insertVertex("c");
+  g.insertEdge("a","b");
+  g.insertEdge("a","c");
+  g.insertEdge("b","c");
+  g.removeVertex("a");
+
+  REQUIRE( g.edges() ==1);
+}
+TEST_CASE("remove edge"){
+  Graph<Vertex, Edge> g;
+  g.insertVertex("a");
+  g.insertVertex("b");
+  g.insertEdge("a", "b");
+  g.removeEdge("a", "b");
+
+  REQUIRE( g. edges() == 0);
 }
 
 TEST_CASE("Eight-vertex test graph has correct properties", "[weight=1]") {
@@ -115,5 +136,3 @@ TEST_CASE("Graph::isAdjacent is correct (opposite-order test)", "[weight=1]") {
   Graph<Vertex, Edge> g = createTestGraph();
   REQUIRE( g.isAdjacent("a", "d") == true );
 }
-
-

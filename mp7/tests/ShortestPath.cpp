@@ -5,7 +5,7 @@
 #include "../DirectedEdge.h"
 #include "../Vertex.h"
 
-//Graph<Vertex, Edge> createTestGraph_shortestPath() {
+Graph<Vertex, Edge> createTestGraph_shortestPath() {
 //
 //         _ b   /--------- h
 //        /  | _/           |

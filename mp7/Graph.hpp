@@ -43,7 +43,6 @@ unsigned int Graph<V,E>::degree(const V & v) const {
 template <class V, class E>
 V & Graph<V,E>::insertVertex(std::string key) {
   V & vx = *(new V(key));
-  removeVertex(key);
   vertexMap.insert(pair<string, V&>(key, vx));
   list<edgeListIter> templist = * new list<edgeListIter>;
   adjList.insert(pair<string, list<edgeListIter>>(key, templist));
@@ -57,6 +56,29 @@ V & Graph<V,E>::insertVertex(std::string key) {
 */
 template <class V, class E>
 void Graph<V,E>::removeVertex(const std::string & key) {
+//  cout<<"removing vertex "+key<<endl;
+  list<edgeListIter> templist = adjList.at(key);
+//  cout<<"edges of vertex to be removed"<<endl;
+//  for(auto it = templist.begin();it!=templist.end();it++){
+//    auto x = (**it).get();
+//    cout<<x<<endl;
+//  }
+//  cout<<"that's it"<<endl;
+//  for(auto it = edgeList.begin();it!=edgeList.end();it++){
+//    auto x = (*it).get();
+//    cout<<"before remov"<<endl;
+//    cout<<x<<endl;
+//  }
+  for(auto it = templist.begin(); it!=templist.end(); it++){
+//    cout<<(**it).get()<<endl;
+    edgeList.erase(*it);
+  }
+/*  cout<<"done removing"<<endl;
+  for(auto it = edgeList.begin();it!=edgeList.end();it++){
+    auto x = (*it).get();
+    cout<<x<<endl;
+  }*/
+  adjList.erase(key);
   vertexMap.erase(key);
 }
 
@@ -74,18 +96,7 @@ E & Graph<V,E>::insertEdge(const V & v1, const V & v2) {
   edgeList.push_back(tempeli);
   auto i = edgeList.end();
   i--;
-  string x = "";
-  string y = "";
-  for(auto it = vertexMap.begin(); it!=vertexMap.end(); it++){
-    if(it->second == v1) {
-      x = it->first;
-
-      break;
-    }
-  }
-
-  list<edgeListIter> templist = adjList.at(x);
-  templist.push_back(i);
+  adjList.at(v1.key()).push_back(i);
 
   return edd;
 }
@@ -101,6 +112,12 @@ void Graph<V,E>::removeEdge(const std::string key1, const std::string key2){
   V v1 = vertexMap.at(key1);
   V v2 = vertexMap.at(key2);
   E edd = E(v1, v2);
+  list<edgeListIter> templist = adjList.at(key1);
+  for(auto it = templist.begin(); it!=templist.end(); it++){
+    if((**it).get()==edd){
+      templist.erase(it);
+    }
+  }
   auto i = edgeList.begin();
   for(;i!=edgeList.end();i++){
     if((*i).get()==edd){
