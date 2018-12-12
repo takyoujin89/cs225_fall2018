@@ -58,26 +58,12 @@ template <class V, class E>
 void Graph<V,E>::removeVertex(const std::string & key) {
 //  cout<<"removing vertex "+key<<endl;
   list<edgeListIter> templist = adjList.at(key);
-//  cout<<"edges of vertex to be removed"<<endl;
-//  for(auto it = templist.begin();it!=templist.end();it++){
-//    auto x = (**it).get();
-//    cout<<x<<endl;
-//  }
-//  cout<<"that's it"<<endl;
-//  for(auto it = edgeList.begin();it!=edgeList.end();it++){
-//    auto x = (*it).get();
-//    cout<<"before remov"<<endl;
-//    cout<<x<<endl;
-//  }
+
   for(auto it = templist.begin(); it!=templist.end(); it++){
 //    cout<<(**it).get()<<endl;
     edgeList.erase(*it);
   }
-/*  cout<<"done removing"<<endl;
-  for(auto it = edgeList.begin();it!=edgeList.end();it++){
-    auto x = (*it).get();
-    cout<<x<<endl;
-  }*/
+
   adjList.erase(key);
   vertexMap.erase(key);
 }
@@ -136,6 +122,9 @@ void Graph<V,E>::removeEdge(const std::string key1, const std::string key2){
 */
 template <class V, class E>
 void Graph<V,E>::removeEdge(const edgeListIter & it){
+  V temp = (*it).get().source();
+  list<edgeListIter> templist = adjList.at(temp.key());
+  templist.erase(it);
   edgeList.erase(it);
 }
 

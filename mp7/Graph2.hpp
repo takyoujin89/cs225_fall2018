@@ -28,7 +28,7 @@ std::list<std::string> Graph<V,E>::shortestPath(const std::string start, const s
   std::list<std::string> path;
   path.push_back(start);
   auto edges = incidentEdges(start);
-
+  
   return path;
 }
 /*
