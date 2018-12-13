@@ -9,6 +9,7 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include <map>
 
 using namespace std;
 /**
@@ -26,16 +27,55 @@ using namespace std;
 template <class V, class E>
 std::list<std::string> Graph<V,E>::shortestPath(const std::string start, const std::string end) {
   std::list<std::string> path;
-  path.push_back(start);
-  auto edges = incidentEdges(start);
-  
+  map<pair<string, string>, string> history;
+  //mark all vertices as unused
+  for (auto it = vertexMap.begin(); it!=vertexMap.end(); it++){
+    (it->second)[(it->second).key()] = "no";
+  }
+  //mark all edges as unused
+  for (auto it = edgeList.begin(); it!=edgeList.end(); it++){
+    string key1 = (*it).get().source().key();
+    string key2 = (*it).get().dest().key();
+    history.insert(pair<pair<string, string>, string>(pair<string,string>(key1,key2),"no"));
+  }
+  unordered_map<string, string> predecessor;
+  queue<string>que;
+  //starting bfS algorithm
+  que.push(start);
+  V & vx = vertexMap.at(start);
+  vx[start] = "yes";
+  while(!que.empty()){
+    string current = que.front();
+    que.pop();
+    vector<string> adjacentnodes;
+    //checking if edge/nodes exist and are adjacent
+    for(auto it = vertexMap.begin(); it!=vertexMap.end(); it++){
+      string checking = it->first;
+      if(isAdjacent(current, checking)){
+        adjacentnodes.push_back(checking);
+      }
+    }
+    //checking all possible edges/nodes
+    for(unsigned long i = 0; i<adjacentnodes.size(); i++){
+      V& tempvert = vertexMap.at(adjacentnodes[i]);
+      pair<string, string> edgecheck = pair<string,string>(current, adjacentnodes[i]);
+      //if vertex is not explored
+      if(tempvert[adjacentnodes[i]]=="no"){
+        history[edgecheck] = "yes";
+        tempvert[adjacentnodes[i]] = "yes";
+        predecessor.insert(pair<string, string>(adjacentnodes[i],current));
+        que.push(adjacentnodes[i]);
+      }
+      else if(history[edgecheck]=="no") history[edgecheck] = "disregard";
+    }
+  }
+  string endpoint = end;
+  //push nodes onto path and reverse order
+  while(endpoint!=start){
+  path.push_back(endpoint);
+  endpoint = predecessor[endpoint];
+  }
+  path.push_back(endpoint);
+  path.reverse();
   return path;
 }
-/*
-push root
-while queue not empty{
-  node A = queue.top;
-  queue.pop;
-  queue.push(A left);
-  queue.push(A right);
-}*/

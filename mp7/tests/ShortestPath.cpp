@@ -1,4 +1,4 @@
-/*
+
 #include "../cs225/catch/catch.hpp"
 
 #include "../Graph.h"
@@ -100,4 +100,3 @@ TEST_CASE("Graph::shortestPath finds a shortest path with six vertices", "[weigh
   // f -> g -> h -> c -> [a/e] -> b
   REQUIRE( path.size() == 6 );
 }
-*/
